@@ -1,6 +1,6 @@
 {
   "name": "database-azure-service-api-tests",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "API Tests for Database Azure Service",
   "repository": {
     "type": "git",

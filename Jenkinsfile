@@ -1,5 +1,5 @@
 String branch_name = env.BRANCH_NAME
-versionNumber = "1.1"
+versionNumber = "0.1"
 
 println "Branch Name: " + branch_name
 isDevelopBranch = branch_name.equals("develop")

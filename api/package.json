@@ -1,6 +1,6 @@
 {
   "name": "database-azure-service",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Service for interacting with Teradata databases on Azure",
   "repository": {
     "type": "git",

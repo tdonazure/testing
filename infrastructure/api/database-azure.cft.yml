@@ -62,12 +62,6 @@ Resources:
             - logs:DescribeLogStreams
             Resource: arn:aws:logs:*:*:*
       Path: "/"
-  resIAMProfile:
-    Type: AWS::IAM::InstanceProfile
-    Properties:
-      Path: "/"
-      Roles:
-        - Ref: resIAMRole
   resApiLambdaFunctionUsersGet:
     Type: AWS::Lambda::Function
     Properties:
@@ -106,8 +100,8 @@ Resources:
         swagger: '2.0'
         info:
           title: Database Azure API
-          description: Private service api for managing Users.
-          version: 0.0.1
+          description: This shouldn't exist, it's going to be deployed in Azure
+          version: 0.1.0
         schemes:
         - https
         produces:
