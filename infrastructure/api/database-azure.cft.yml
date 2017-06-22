@@ -47,7 +47,6 @@ Resources:
           Action:
           - sts:AssumeRole
       ManagedPolicyArns:
-      - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
       - arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess
       - arn:aws:iam::aws:policy/AWSLambdaFullAccess
       Policies:
@@ -226,11 +225,6 @@ Resources:
       Variables:
         environmentName:
            Ref: paramEnvironment
-        usersDynamoTableName:
-          Fn::Join:
-          - '_'
-          - - Ref: paramEnvironment
-            - DatabaseAzureService_Users
   resUsersAPIBasePathMapping:
     Type: AWS::ApiGateway::BasePathMapping
     DependsOn: resUsersAPIDeployStage
@@ -246,35 +240,6 @@ Resources:
         Ref: resAPIGateway
       Stage:
         Ref: paramEnvironment
-  resDynamoTableUsers:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      AttributeDefinitions:
-      - AttributeName: userId
-        AttributeType: S
-      - AttributeName: userName
-        AttributeType: S
-      GlobalSecondaryIndexes:
-      - IndexName: UserNameIndex
-        KeySchema:
-        - AttributeName: userName
-          KeyType: HASH
-        Projection:
-          ProjectionType: ALL
-        ProvisionedThroughput:
-          ReadCapacityUnits: 5
-          WriteCapacityUnits: 5
-      KeySchema:
-      - AttributeName: userId
-        KeyType: HASH
-      ProvisionedThroughput:
-        ReadCapacityUnits: 5
-        WriteCapacityUnits: 5
-      TableName:
-        Fn::Join:
-        - '_'
-        - - Ref: paramEnvironment
-          - DatabaseAzureService_Users
 Outputs:
   outAPIGateway:
     Description: Output for Database-Azure-Service API Gateway

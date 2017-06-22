@@ -21,10 +21,9 @@ npm run test         # executes the unit tests with coverage stats
 ```
 
 #### Run the API Locally
-The database-azure-service api runs on localhost port 8180 and 8181. Use these commands to fire it up. These are long running processes, so it's best to run each one in a separate terminal shell.
+The database-azure-service api runs on localhost port 8180. Use these commands to fire it up. These are long running processes, so it's best to run each one in a separate terminal shell.
 ```
 cd {project_root}/api
-npm run server:db    # Starts up dynamodb-local on port 8181
 npm run server:api   # Starts up serverless-webpack on port 8180
 ```
 

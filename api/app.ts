@@ -1,6 +1,6 @@
 import * as AWS from "aws-sdk";
 import { interfaces } from "inversify";
-import { DatabaseConfig, EnvConfig } from "./config/env.config";
+import { EnvConfig } from "./config/env.config";
 import { container } from "./config/ioc.config";
 import { Correlation } from "./services/logger/correlation.model";
 import { LoggerFactory, LoggerServiceInterface } from "./services/logger/interfaces/logger.service";
@@ -8,11 +8,7 @@ import { LoggerFactory, LoggerServiceInterface } from "./services/logger/interfa
 const envConfig = <EnvConfig> {
     awsRegion: "us-west-2",
     apiDomain: null,
-    environmentName: null,
-
-    database: <DatabaseConfig> {
-        usersTable: null
-    }
+    environmentName: null
 };
 
 // Get a LoggerFactory from our IOC container
@@ -46,18 +42,11 @@ export const start = (event) => {
         // -- config top level
         envConfig.apiDomain = "http://localhost:8180";
         envConfig.environmentName = "local";
-
-        // -- config database
-        awsConfig.dynamodb = { endpoint: "http://localhost:8181" };
-        envConfig.database.usersTable = "local_DatabaseAzureService_Users";
     }  else {
 
         // -- config top level
         envConfig.environmentName = event.stageVariables.environmentName;
         envConfig.apiDomain = `https://${event.stageVariables.apiDomain}`;
-
-        // -- config database
-        envConfig.database.usersTable = event.stageVariables.usersDynamoTableName;
     }
 
     // add EnvConfig to container

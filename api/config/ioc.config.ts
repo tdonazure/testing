@@ -1,6 +1,5 @@
 import { Container, interfaces } from "inversify";
 import { UsersController } from "../resources/users/users.controller";
-import { UsersRepository } from "../resources/users/users.repository";
 import { UsersService } from "../resources/users/users.service";
 import { Correlation } from "../services/logger/correlation.model";
 import { LoggerServiceInterface } from "../services/logger/interfaces/logger.service";
@@ -9,7 +8,6 @@ import { LoggerService } from "../services/logger/logger.service";
 const container = new Container();
 
 container.bind<UsersController>(UsersController).toSelf();
-container.bind<UsersRepository>(UsersRepository).toSelf();
 container.bind<UsersService>(UsersService).toSelf();
 
 // default to bind an empty Correlation object, should rebind correct one in app.start()
