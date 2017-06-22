@@ -106,7 +106,7 @@ Resources:
       Body:
         swagger: '2.0'
         info:
-          title: Database AWS API
+          title: Database Azure API
           description: Private service api for managing Users.
           version: 0.0.1
         schemes:
