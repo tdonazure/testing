@@ -1,0 +1,32 @@
+service: database-azure-service
+
+plugins: 
+    - serverless-webpack
+    - serverless-dynamodb-local
+
+custom:
+    webpack: './config/webpack.config.dev.js'
+    dynamodb:
+        start:
+            port: 8171
+            inMemory: true
+            migration: true
+        migration:
+            dir: ./data/migrations
+
+provider:
+    name: aws
+    region: us-west-2
+    runtime: nodejs4.3
+
+functions:
+    sitesGet:
+        handler: usersGet.handler
+        events:
+            - http:
+                method: get
+                path: users
+                parameters:
+                    queryStrings:
+                        fields: false
+                cors: true

@@ -1,0 +1,9 @@
+instrumentation:
+    excludes: ['**/*handlers/**', '**/config/**', '**/dist/**']
+    include-all-sources: true
+reporting:
+    print: none # don't output anything for js coverage, wait for ts coverage
+    reports: null
+    report-config:
+        lcovonly: 
+            file: lcov-ts.info
