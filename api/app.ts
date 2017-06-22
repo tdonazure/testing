@@ -44,11 +44,11 @@ export const start = (event) => {
         process.env.AWS_REGION = "us-west-2";
 
         // -- config top level
-        envConfig.apiDomain = "http://localhost:8170";
+        envConfig.apiDomain = "http://localhost:8180";
         envConfig.environmentName = "local";
 
         // -- config database
-        awsConfig.dynamodb = { endpoint: "http://localhost:8171" };
+        awsConfig.dynamodb = { endpoint: "http://localhost:8181" };
         envConfig.database.usersTable = "local_DatabaseAzureService_Users";
     }  else {
 

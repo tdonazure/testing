@@ -13,8 +13,8 @@
     "clean:spec": "rm -rf ./compiled_tests && rm -rf ./coverage",
     "lint": "npm run lint:ts",
     "lint:ts": "../node_modules/.bin/tslint -c ./tslint.json \"./**/*.ts\" -e \"./node_modules/**\" --format stylish",
-    "server:api": "./node_modules/.bin/serverless webpack serve --port 8170",
-    "server:apidebug": "node --inspect --debug-brk ./node_modules/.bin/serverless webpack serve --port 8170",
+    "server:api": "./node_modules/.bin/serverless webpack serve --port 8180",
+    "server:apidebug": "node --inspect --debug-brk ./node_modules/.bin/serverless webpack serve --port 8180",
     "server:db": "./node_modules/.bin/serverless dynamodb install && ./node_modules/.bin/serverless dynamodb start",
     "start": "npm run clean && NODE_ENV=local npm-run-all -l -p -r server:*",
     "test": "npm run lint && npm run build:spec && ./node_modules/.bin/istanbul cover ./config/jasmine.runner.js && node ./config/coverage.runner.js"

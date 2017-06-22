@@ -8,7 +8,7 @@ custom:
     webpack: './config/webpack.config.dev.js'
     dynamodb:
         start:
-            port: 8171
+            port: 8181
             inMemory: true
             migration: true
         migration:
