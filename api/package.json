@@ -1,10 +1,10 @@
 {
-  "name": "database-azure-service",
+  "name": "database-az-service",
   "version": "0.1.0",
   "description": "Service for interacting with Teradata databases on Azure",
   "repository": {
     "type": "git",
-    "url": "git@github.com:tdslalom/database-azure-service.git"
+    "url": "git@github.com:tdslalom/database-az-service.git"
   },
   "scripts": {
     "build": "npm run clean && ./node_modules/.bin/webpack --config config/webpack.config.dev.js --display-error-details --bail",

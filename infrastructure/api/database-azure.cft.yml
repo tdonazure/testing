@@ -14,7 +14,7 @@ Parameters:
   paramServiceName:
     Type: String
     Description: The name of the service
-    Default: database-azure-service
+    Default: database-az-service
   paramReleaseFolder:
     Type: String
     Description: The Release Folder Version
@@ -236,7 +236,7 @@ Resources:
         Ref: paramEnvironment
 Outputs:
   outAPIGateway:
-    Description: Output for Database-Azure-Service API Gateway
+    Description: Output for database-az-service API Gateway
     Value:
       Ref: resAPIGateway
     Export:

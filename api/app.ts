@@ -67,7 +67,7 @@ export const start = (event) => {
     }
 
     // reset context and bind
-    correlationObject.context = "database-azure-service-api";
+    correlationObject.context = "database-az-service-api";
     container.rebind<Correlation>(Correlation).toConstantValue(correlationObject);
 
     // set aws config

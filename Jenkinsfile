@@ -15,5 +15,5 @@ if (isDevelopBranch){
 
 
 node {
-  build job: 'database-azure-service-dev', parameters: [string(name: 'github_repository', value: 'https://github.com/tdslalom/database-azure-service.git'), string(name: 'github_version', value: "${versionNumber}"),string(name: 'github_branch', value: env.BRANCH_NAME),string(name: 'environment', value: 'dev' ), string(name: 'sq_project', value: sonar_project ),[$class: 'BooleanParameterValue', name: 'deploy', value: isDevelopBranch]], wait: true
+  build job: 'database-az-service-dev', parameters: [string(name: 'github_repository', value: 'https://github.com/tdslalom/database-az-service.git'), string(name: 'github_version', value: "${versionNumber}"),string(name: 'github_branch', value: env.BRANCH_NAME),string(name: 'environment', value: 'dev' ), string(name: 'sq_project', value: sonar_project ),[$class: 'BooleanParameterValue', name: 'deploy', value: isDevelopBranch]], wait: true
 }

@@ -1,4 +1,4 @@
-service: database-azure-service
+service: database-az-service
 
 plugins: 
     - serverless-webpack
