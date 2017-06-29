@@ -1,0 +1,247 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  paramEnvironment:
+    Type: String
+    Description: What stage do you want to deploy to? Enter dev, test, or prod. Note,
+      this will only take place if you choose to deploy
+    AllowedValues:
+    - dev
+    - test
+    - preprod
+    - prod
+    Default: dev
+  paramServiceName:
+    Type: String
+    Description: The name of the service
+    Default: database-az-service
+  paramReleaseFolder:
+    Type: String
+    Description: The Release Folder Version
+Mappings:
+  mapEnvironment:
+    dev:
+      S3Bucket: td-artifacts-le
+      basePath: dev.api.teradatacloud.io
+    test:
+      S3Bucket: td-artifacts-le
+      basePath: test.api.teradatacloud.io
+    preprod:
+      S3Bucket: td-artifacts-le
+      basePath: preprod.api.teradatacloud.io
+    prod:
+      S3Bucket: td-artifacts
+      basePath: api.intellicloud.teradata.com
+Resources:
+  resIAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+            - apigateway.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess
+      - arn:aws:iam::aws:policy/AWSLambdaFullAccess
+      Policies:
+      - PolicyName: CloudWatchLogAccess
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            - logs:DescribeLogStreams
+            Resource: arn:aws:logs:*:*:*
+      Path: "/"
+  resApiLambdaFunctionUsersGet:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::FindInMap:
+          - mapEnvironment
+          - Ref: paramEnvironment
+          - S3Bucket
+        S3Key:
+          Fn::Join:
+          - "/"
+          - - Ref: paramServiceName
+            - Ref: paramEnvironment
+            - Ref: paramReleaseFolder
+            - lambda
+            - databaseAzureService_usersGet.zip
+      Description: databaseAzureService_usersGet
+      FunctionName:
+        Fn::Join:
+        - '_'
+        - - Ref: paramEnvironment
+          - databaseAzureService_usersGet
+      Handler: usersGet.handler
+      MemorySize: '1024'
+      Role:
+        Fn::GetAtt:
+        - resIAMRole
+        - Arn
+      Runtime: nodejs4.3
+      Timeout: '10'
+  resAPIGateway:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Body:
+        swagger: '2.0'
+        info:
+          title: Database Azure API
+          description: This shouldn't exist, it's going to be deployed in Azure
+          version: 0.1.0
+        schemes:
+        - https
+        produces:
+        - application/json
+        tags:
+        - name: users
+          description: Interacting with Users
+        paths:
+          "/users":
+            get:
+              tags:
+              - users
+              produces:
+              - application/json
+              summary: Retrieve a list of Users
+              parameters:
+              - name: fields
+                in: query
+                description: Specify the object properties to be returned for each User object.
+                  "userId" will always be returned for a user.
+                required: false
+                type: string
+              responses:
+                '200':
+                  description: List of Users
+                  schema:
+                    "$ref": "#/definitions/UserListResponse"
+                '500':
+                  description: Internal Server Error
+                  schema:
+                    "$ref": "#/definitions/Error"
+              x-amazon-apigateway-auth:
+                type: aws_iam
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: '200'
+                uri:
+                  Fn::Join:
+                  - ''
+                  - - 'arn:aws:apigateway:'
+                    - Ref: AWS::Region
+                    - ":lambda:path/2015-03-31/functions/"
+                    - Fn::GetAtt:
+                      - resApiLambdaFunctionUsersGet
+                      - Arn
+                    - "/invocations"
+                passthroughBehavior: when_no_match
+                httpMethod: POST
+                credentials:
+                  Fn::GetAtt:
+                  - resIAMRole
+                  - Arn
+                type: aws_proxy
+        definitions:
+          SuccessResponse:
+            type: object
+            properties:
+              result:
+                type: string
+          Error:
+            type: object
+            properties:
+              errorCode:
+                type: integer
+                format: int32
+              message:
+                type: string
+              data:
+                type: object
+          User:
+            type: object
+            properties:
+              userId:
+                type: string
+              userName:
+                type: string
+          UserListResponse:
+            type: object
+            properties:
+              result:
+                type: array
+                items:
+                  "$ref": "#/definitions/User"
+            required:
+            - result
+      Description:
+        Fn::Join:
+        - " "
+        - - Database Azure API
+          - Ref: paramEnvironment
+      Name:
+        Fn::Join:
+        - " "
+        - - Database Azure API
+          - Ref: paramEnvironment
+  resAPIGatewayDeploy:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId:
+        Ref: resAPIGateway
+  resUsersAPIDeployStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      DeploymentId:
+        Ref: resAPIGatewayDeploy
+      Description:
+        Fn::Join:
+        - '_'
+        - - Ref: paramEnvironment
+      RestApiId:
+        Ref: resAPIGateway
+      StageName:
+        Ref: paramEnvironment
+      Variables:
+        environmentName:
+           Ref: paramEnvironment
+  resUsersAPIBasePathMapping:
+    Type: AWS::ApiGateway::BasePathMapping
+    DependsOn: resUsersAPIDeployStage
+    Properties:
+      BasePath:
+        Ref: paramServiceName
+      DomainName:
+        Fn::FindInMap:
+        - mapEnvironment
+        - Ref: paramEnvironment
+        - basePath
+      RestApiId:
+        Ref: resAPIGateway
+      Stage:
+        Ref: paramEnvironment
+Outputs:
+  outAPIGateway:
+    Description: Output for database-az-service API Gateway
+    Value:
+      Ref: resAPIGateway
+    Export:
+      Name:
+        Fn::Sub:
+        - "${environment}DatabaseAzureAPIGateway"
+        - environment:
+            Ref: paramEnvironment

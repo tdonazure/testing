@@ -1,0 +1,29 @@
+{
+  "extends": "tslint:recommended",
+  "rules": {
+    "no-angle-bracket-type-assertion": false,
+    "max-classes-per-file": [true, 3],
+    "trailing-comma": [
+      false,
+      {
+        "multiline": "always",
+        "single": "always"
+      }
+    ],
+    "object-literal-sort-keys": false,
+    "member-access": [
+      false
+    ],
+    "interface-name": [
+      false,
+      "always-prefix"
+    ],
+    "object-literal-shorthand": false,
+    "no-console": [
+      false
+    ]
+  },
+  "rulesDirectory": [
+     
+  ]
+}

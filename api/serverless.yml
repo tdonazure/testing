@@ -1,0 +1,24 @@
+service: database-az-service
+
+plugins: 
+    - serverless-webpack
+
+custom:
+    webpack: './config/webpack.config.dev.js'
+
+provider:
+    name: aws
+    region: us-west-2
+    runtime: nodejs4.3
+
+functions:
+    sitesGet:
+        handler: usersGet.handler
+        events:
+            - http:
+                method: get
+                path: users
+                parameters:
+                    queryStrings:
+                        fields: false
+                cors: true
