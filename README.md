@@ -1,1 +1,1 @@
-# database-azure-service
+# database-az-service
