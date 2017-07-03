@@ -13,12 +13,6 @@
     },
     "codeZipFile": {
       "value": ""
-    },
-    "connectionName": {
-      "value": ""
-    },
-    "connectionValue": {
-      "value": "DefaultEndpointsProtocol=https;AccountName=;AccountKey="
     }
   }
 }
